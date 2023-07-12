@@ -10,6 +10,7 @@ import SignalServiceKit
 public class OnboardingNavigationController: OWSNavigationController {
     let onboardingController: OnboardingController
 
+self.onboardingController = onboardingController
     @objc
     public init(onboardingController: OnboardingController) {
         self.onboardingController = onboardingController
