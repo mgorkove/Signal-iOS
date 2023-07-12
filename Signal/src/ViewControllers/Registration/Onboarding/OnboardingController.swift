@@ -15,6 +15,7 @@ public class OnboardingNavigationController: OWSNavigationController {
         self.onboardingController = onboardingController
         super.init()
         if let nextMilestone = onboardingController.nextMilestone {
+guard let nextMilestone = onboardingController.nextMilestone else { return }
             setViewControllers([onboardingController.nextViewController(milestone: nextMilestone)], animated: false)
         }
     }
