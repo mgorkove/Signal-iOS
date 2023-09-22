@@ -236,7 +236,7 @@ public class OnboardingProfileCreationViewController: OnboardingBaseViewControll
 
     public override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        updateAvatarView()
+        //updateAvatarView()
         applyTheme()
     }
 
@@ -370,7 +370,7 @@ public class OnboardingProfileCreationViewController: OnboardingBaseViewControll
         AssertIsOnMainThread()
         self.avatarData = avatarImage.map { OWSProfileManager.avatarData(forAvatarImage: $0) }
 
-        updateAvatarView()
+        //updateAvatarView()
     }
 
     private func updateAvatarView() {
@@ -394,7 +394,7 @@ public class OnboardingProfileCreationViewController: OnboardingBaseViewControll
             context: .profile,
             currentAvatarImage: currentAvatarImage
         ) { [weak self] newAvatarImage in
-            self?.setAvatarImage(newAvatarImage)
+            //self?.setAvatarImage(newAvatarImage)
         }
         presentFormSheet(OWSNavigationController(rootViewController: vc), animated: true)
     }
@@ -407,16 +407,20 @@ extension OnboardingProfileCreationViewController: UITextFieldDelegate {
     public func textField(_ textField: UITextField,
                           shouldChangeCharactersIn range: NSRange,
                           replacementString string: String) -> Bool {
-
+        //Logger.info("in onboarding profile sfkjdhskd")
         // QuickType will append a space to any suggestions in anticipation that the user is about
         // to type more. If we're handed a multichar string with a space at the end, drop the space.
         let hasExtraTrailingSpace = string.count >= 2 && string.last == " "
         let trimmedString = hasExtraTrailingSpace ? String(string.dropLast()) : string
+        
+        let length = trimmedString.utf8.count
+        let newTrimmedString = String(trimmedString.dropLast(trimmedString.count - length))
+        
         let textBefore = textField.text
 
         let textFieldHelperPermitsChange = TextFieldHelper.textField(
             textField,
-            shouldChangeCharactersInRange: range,
+            shouldChangeCharactersInRange: range, //range
             replacementString: trimmedString.withoutBidiControlCharacters,
             maxByteCount: OWSUserProfile.maxNameLengthBytes
         )

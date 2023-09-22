@@ -7,7 +7,6 @@ import SafariServices
 
 @objc
 public class OnboardingSplashViewController: OnboardingBaseViewController {
-
     let modeSwitchButton = UIButton()
 
     override var primaryLayoutMargins: UIEdgeInsets {

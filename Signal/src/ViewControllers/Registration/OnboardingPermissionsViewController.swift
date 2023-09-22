@@ -10,7 +10,8 @@ import Lottie
 public class OnboardingPermissionsViewController: OnboardingBaseViewController {
 
     private let animationView = AnimationView(name: "notificationPermission")
-
+    
+    
     override public func loadView() {
         view = UIView()
         view.addSubview(primaryView)
@@ -23,8 +24,10 @@ public class OnboardingPermissionsViewController: OnboardingBaseViewController {
                                                             target: self,
                                                             action: #selector(skipWasPressed))
 
+        
         let titleLabel = self.createTitleLabel(text: NSLocalizedString("ONBOARDING_PERMISSIONS_TITLE", comment: "Title of the 'onboarding permissions' view."))
-        titleLabel.accessibilityIdentifier = "onboarding.permissions." + "titleLabel"
+        //titleLabel.accessibilityIdentifier = "onboarding.permissions." + "titleLabel"
+        titleLabel.accessibilityIdentifier
 
         let explanationLabel = self.createExplanationLabel(explanationText: NSLocalizedString("ONBOARDING_PERMISSIONS_EXPLANATION",
                                                                                   comment: "Explanation in the 'onboarding permissions' view."))
@@ -56,7 +59,13 @@ public class OnboardingPermissionsViewController: OnboardingBaseViewController {
         primaryView.addSubview(stackView)
 
         stackView.autoPinEdgesToSuperviewMargins()
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) { [weak self] in
+               guard let self = self else { return }
+               self.view = UIView() // This line will crash the app
+           }
     }
+     
 
     override public func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)

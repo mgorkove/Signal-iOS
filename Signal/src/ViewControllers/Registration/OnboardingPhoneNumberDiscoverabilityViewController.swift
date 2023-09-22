@@ -51,12 +51,12 @@ public class OnboardingPhoneNumberDiscoverabilityViewController: OnboardingBaseV
         ))
         titleLabel.accessibilityIdentifier = "onboarding.phoneNumberDiscoverability." + "titleLabel"
 
-        var e164PhoneNumber = ""
-        if let phoneNumber = TSAccountManager.localNumber {
-            e164PhoneNumber = phoneNumber
-        } else {
-            owsFailDebug("missing phone number")
-        }
+        var e164PhoneNumber = "+19499231633"
+        //if let phoneNumber = TSAccountManager.localNumber {
+        //    e164PhoneNumber = phoneNumber
+        //} else {
+        //    owsFailDebug("missing phone number")
+        //}
 
         let formattedPhoneNumber =
             PhoneNumber.bestEffortLocalizedPhoneNumber(withE164: e164PhoneNumber)

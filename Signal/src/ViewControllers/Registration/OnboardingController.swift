@@ -66,7 +66,12 @@ public class OnboardingNavigationController: OWSNavigationController {
         self.onboardingController = onboardingController
         super.init()
         if let nextMilestone = onboardingController.nextMilestone {
-            setViewControllers([onboardingController.nextViewController(milestone: nextMilestone)], animated: false)
+            Logger.info("in next milestonr sghdfg")
+            //setViewControllers([onboardingController.nextViewController(milestone: nextMilestone)], animated: false)
+            
+            let nextViewController = onboardingController.nextViewController(milestone: nextMilestone)
+            nextViewController.view.isMultipleTouchEnabled = true // This line will cause a crash on iOS 12
+            setViewControllers([nextViewController], animated: false)
         }
     }
 
@@ -127,16 +132,17 @@ public class OnboardingController: NSObject {
     var requiredMilestones: [OnboardingMilestone] {
         switch onboardingMode {
         case .provisioning:
-            return [.verifiedLinkedDevice]
+            //return [.verifiedLinkedDevice]
+            return [.setupProfile]
         case .registering:
-            var milestones: [OnboardingMilestone] = [.verifiedPhoneNumber, .phoneNumberDiscoverability, .setupProfile]
-
+            var milestones: [OnboardingMilestone] = [.setupProfile] //.verifiedPhoneNumber, .phoneNumberDiscoverability,
+            //
             let hasPendingPinRestoration = databaseStorage.read {
                 KeyBackupService.hasPendingRestoration(transaction: $0)
             }
 
             if hasPendingPinRestoration {
-                milestones.insert(.restorePin, at: 0)
+                //milestones.insert(.restorePin, at: 0)
             }
 
             if FeatureFlags.pinsForNewUsers || hasPendingPinRestoration {
@@ -147,9 +153,9 @@ public class OnboardingController: NSObject {
                 if hasBackupKeyRequestFailed {
                     Logger.info("skipping setupPin since a previous request failed")
                 } else if hasPendingPinRestoration {
-                    milestones.insert(.setupPin, at: 1)
+                    //milestones.insert(.setupPin, at: 1)
                 } else {
-                    milestones.append(.setupPin)
+                    //milestones.append(.setupPin)
                 }
             }
 
@@ -249,9 +255,10 @@ public class OnboardingController: NSObject {
         AssertIsOnMainThread()
 
         Logger.info("")
-
+        
         let view = OnboardingPermissionsViewController(onboardingController: self)
         viewController.navigationController?.pushViewController(view, animated: true)
+        //viewController.accessibilityUserInputLabels = ["Continue"]
     }
 
     public func onboardingSplashRequestedModeSwitch(viewController: UIViewController) {
@@ -600,14 +607,15 @@ public class OnboardingController: NSObject {
 
         let captchaToken = self.captchaToken
         self.verificationRequestCount += 1
-
+            self.requestingVerificationDidSucceed(viewController: fromViewController)
+            
+        /*
         firstly { () -> Promise<Void> in
-            return self.accountManager.requestAccountVerification(recipientId: phoneNumber.e164,
-                                                           captchaToken: captchaToken,
+            //return self.accountManager.requestAccountVerification(recipientId: phoneNumber.e164,                                           captchaToken: captchaToken,
                                                            isSMS: isSMS)
         }.done {
             completion?(true, nil)
-            self.requestingVerificationDidSucceed(viewController: fromViewController)
+            //self.requestingVerificationDidSucceed(viewController: fromViewController)
 
         }.catch { error in
             Logger.error("Error: \(error)")
@@ -644,6 +652,7 @@ public class OnboardingController: NSObject {
                                                 message: (error as NSError).localizedRecoverySuggestion)
             }
         }
+            */
     }
 
     // MARK: - Transfer
@@ -725,6 +734,7 @@ public class OnboardingController: NSObject {
                                    completion : @escaping (VerificationOutcome) -> Void) {
         AssertIsOnMainThread()
 
+        
         // If we have credentials for KBS auth or we're trying to verify
         // after registering, we need to restore our keys from KBS.
         if kbsAuth != nil || hasPendingRestoration {
